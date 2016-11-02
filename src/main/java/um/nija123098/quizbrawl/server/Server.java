@@ -95,7 +95,7 @@ public class Server implements IListener<Event>{
         }catch(Exception e){
             e.printStackTrace();
         }
-        Log.WARN.log("CLOSING");
+        Log.warn("CLOSING");
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

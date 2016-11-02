@@ -32,7 +32,7 @@ public class PendingQuestionProcessor implements QuestionProcessor {
                 this.pendingQuestions.add(pq);
             }
         });
-        Log.INFO.log("Loaded " + this.strings.size() + " normal and " + this.pendingQuestions.size() + " pending questions");
+        Log.info("Loaded " + this.strings.size() + " normal and " + this.pendingQuestions.size() + " pending questions");
     }
     @Override
     public boolean giveQuestion(Question question, Parser parser, String raw) {
@@ -87,9 +87,6 @@ public class PendingQuestionProcessor implements QuestionProcessor {
                 break;
             }
         }
-        /*if (l == s.length()){
-            return "";
-        }*/
         return s;
     }
     private void done(PenQuest penQuest) {
@@ -121,7 +118,7 @@ public class PendingQuestionProcessor implements QuestionProcessor {
             this.questionProcessor = questionProcessor;
         }
         public PenQuest(Question question, String[] ids, String raw, String parser, PendingQuestionProcessor questionProcessor) {
-            super(question, ids, raw, parser);
+            super(question, ids[0].equals("") ? new String[0] : ids, raw, parser);
             this.questionProcessor = questionProcessor;
         }
         @Override

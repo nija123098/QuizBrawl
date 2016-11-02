@@ -38,12 +38,12 @@ public class ClientImpl implements Client {
             try{
                 RequestHandler.request(() -> this.handler.getChannel().removePermissionsOverride(this.client.user()));
             }catch(NullPointerException ignored){
-                Log.WARN.log("Attempted kicking a user from a imaginary room");
+                Log.warn("Attempted kicking a user from a imaginary room");
             }
             try{
                 RequestHandler.request(() -> this.handler.getVoiceChannel().removePermissionsOverride(this.client.user()));
             }catch(NullPointerException ignored){
-                Log.WARN.log("Attempted kicking a user from a imaginary voice room");
+                Log.warn("Attempted kicking a user from a imaginary voice room");
             }
             this.mute(false);
             this.deafen(false);
@@ -85,7 +85,7 @@ public class ClientImpl implements Client {
     }
     @Override
     public void enableTyping(boolean enable) {
-        Log.TRACE.log((enable ? "allowing" : "disallowing") + " " + this.getName() + "'s tying permisions");
+        Log.debug((enable ? "allowing" : "disallowing") + " " + this.getName() + "'s tying permisions");
         PermisionsHelper helper = new PermisionsHelper(this.client.user(), this.handler.getChannel()).addAllow(Permissions.READ_MESSAGES);
         if (enable){
             helper.addAllow(Permissions.SEND_MESSAGES);

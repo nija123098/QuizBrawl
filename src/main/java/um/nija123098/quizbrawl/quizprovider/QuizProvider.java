@@ -43,8 +43,6 @@ public class QuizProvider {
     protected void addQuestion(Question question){
         if (question != null){
             this.questions.add(question);
-        }else{
-            System.out.println("!!!!");
         }
     }
     public List<Brawler> getBrawlers() {

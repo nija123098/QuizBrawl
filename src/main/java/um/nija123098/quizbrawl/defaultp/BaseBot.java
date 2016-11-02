@@ -47,7 +47,7 @@ public class BaseBot implements Bot, Runnable {
         }else{
             if (this.qMode){
                 this.answer(s, client);
-            }else if (s.startsWith("next") || s.trim().equals("n")){// TODO: 10/22/2016 get proper command structure
+            }else if (s.startsWith("next") || s.trim().equals("n")){
                 this.next();
             }else if (s.startsWith("request ")){
                 String[] strings = s.replace("<@", ":::::::").replace(">", ":::::::").split(":::::::");

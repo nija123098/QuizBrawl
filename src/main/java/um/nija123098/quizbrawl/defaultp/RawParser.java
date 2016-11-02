@@ -27,12 +27,7 @@ public class RawParser implements Parser {
             this.client.msg("Splitter set to \"" + this.splitter + "\"");
         }else if (s.startsWith("question ")){
             String raw = s.substring(9).replace(this.splitter, SPLITTER) + ":" + this.client.getId();
-            try{
-                if (this.questionProcessor.giveQuestion(this.parse(raw), this, raw)){
-                    System.out.println("MADE IT");
-                }else{
-                    System.out.println("REJECTED");
-                }
+            try{this.questionProcessor.giveQuestion(this.parse(raw), this, raw);
             }catch(Exception e){
                 this.client.msg(e.getMessage());
                 e.printStackTrace();

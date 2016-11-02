@@ -35,7 +35,7 @@ public class BotFuture implements Future<BotHandler> {
     }
     @Override
     public synchronized boolean cancel(boolean mayInterruptIfRunning) {
-        Log.WARN.log("Canceling " + this.client.name() + "'s bot future which was " + (this.isDone() ? "not" : "") + " done");
+        Log.warn("Canceling " + this.client.name() + "'s bot future which was " + (this.isDone() ? "not" : "") + " done");
         if (this.isDone()){
             this.bot.abandonRoom();
         }

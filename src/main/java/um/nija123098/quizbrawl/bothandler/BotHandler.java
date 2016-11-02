@@ -62,18 +62,18 @@ public class BotHandler implements BotLink {
                 try{attemptLog();
                     this.cancel();
                     if (discordClient.isReady()){
-                        Log.INFO.log("Log in success");
+                        Log.info("Log in success");
                     }
                 }catch(Exception e){
-                    Log.INFO.log("Bot failed to log in");
+                    Log.info("Bot failed to log in");
                 }
             }
         }, 0, 3000);
     }
     private void attemptLog(){
         RequestHandler.request(() -> {
-            discordClient = new ClientBuilder().withToken(token).login();
-            discordClient.getDispatcher().registerListener(this);
+            this.discordClient = new ClientBuilder().withToken(token).login();
+            this.discordClient.getDispatcher().registerListener(this);
         });
     }
     public void bind(ClientPool clientPool){
@@ -134,8 +134,8 @@ public class BotHandler implements BotLink {
         });
         this.reattemptBotBind();
         this.bot.init(this);
-        this.name = this.discordClient.getOurUser().getName();// todo fix below
-        Log.INFO.log("Bot type " + this.bot.getClass().getSimpleName() + " inited with " + this.name + "'" + (this.name.endsWith("s") ? "s" : "") + " profile");
+        this.name = this.discordClient.getOurUser().getName();
+        Log.info("Bot type " + this.bot.getClass().getSimpleName() + " inited with " + this.name + "'" + (!this.name.endsWith("s") ? "s" : "") + " profile");
     }
     @EventSubscriber
     public void handle(MessageReceivedEvent event){
@@ -156,9 +156,9 @@ public class BotHandler implements BotLink {
         try{this.abandonRoom();
         }catch(Exception ignored){}
         if (!event.getReason().name().equals("LOGGED_OUT")){
-            Log.ERROR.log(this.name + " using " + this.bot.getClass().getSimpleName() + " disconnected because of " + ((DiscordDisconnectedEvent) event).getReason().name());
+            Log.error(this.name + " using " + this.bot.getClass().getSimpleName() + " disconnected because of " + ((DiscordDisconnectedEvent) event).getReason().name());
         }else{
-            Log.INFO.log(this.name + " using " + this.bot.getClass().getSimpleName() + " logged out");
+            Log.info(this.name + " using " + this.bot.getClass().getSimpleName() + " logged out");
         }
     }
     @EventSubscriber
@@ -167,7 +167,7 @@ public class BotHandler implements BotLink {
             this.connected = true;
             this.pool.provide(this);
         }
-        Log.INFO.log(this.name + " reconnected!");
+        Log.info(this.name + " reconnected!");
     }
     @Override
     public File getTempFile(String extension){
@@ -206,7 +206,7 @@ public class BotHandler implements BotLink {
             this.bot.onNewRoom(s);
             requestJoin(client);
         });
-        Log.INFO.log(this.name + " started room " + s + " for " + client.name());
+        Log.info(this.name + " started room " + s + " for " + client.name());
     }
     public String roomName() {
         if (this.chan != null){
@@ -224,7 +224,7 @@ public class BotHandler implements BotLink {
         this.clientImpls.remove(client);
         if (this.clientImpls.size() == 0){
             this.abandonRoom();
-            Log.INFO.log("Closing " + this.name + "' room because there are no more clients");
+            Log.info("Closing " + this.name + "' room because there are no more clients");
         }
     }
     public void leave(ServerClient client) {

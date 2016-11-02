@@ -53,7 +53,7 @@ public class UserRoom implements IListener<Event> {// should change to command s
     private void handle(String handle){
         handle = handle.toLowerCase();
         if (handle.contains("help")){
-            this.msg("Commands:\n" +// TODO: 10/21/2016 make proper command structure
+            this.msg("Commands:\n" +
                     "  join <room name> - joins a room with the given name\n" +
                     "  join <@moderator> - joins the current room of the mentioned moderator if the moderator is in use\n" +
                     "  join <room name> <@moderator> - joins a room with the mentioned moderator if the name and moderator are available\n" +

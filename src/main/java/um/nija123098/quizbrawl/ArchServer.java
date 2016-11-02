@@ -55,11 +55,11 @@ public class ArchServer {
                 if (bFiles[i].getName().endsWith(".jar")){
                     int count = bots.size();
                     // bots.addAll(FileHelper.grabInstances(Bot.class, bFiles[i].getPath()));
-                    Log.INFO.log("Loaded " + (bots.size() - count) + " Bots from "  + bFiles[i].getName());
+                    Log.info("Loaded " + (bots.size() - count) + " Bots from "  + bFiles[i].getName());
                 }
             }
         }
-        Log.INFO.log("Loaded " + bots.size() + " Bots total");
+        Log.info("Loaded " + bots.size() + " Bots total");
         while (bots.size() != tokens.size() - 1){
             bots.add(new BaseBot());
         }
@@ -70,11 +70,11 @@ public class ArchServer {
                 if (pFiles[i].getName().endsWith(".jar")){
                     int count = parsers.size();
                     bots.addAll(FileHelper.grabInstances(Bot.class, bFiles[i].getPath()));
-                    Log.INFO.log("Loaded " + (parsers.size() - count) + " Parsers from "  + pFiles[i].getName());
+                    Log.info("Loaded " + (parsers.size() - count) + " Parsers from "  + pFiles[i].getName());
                 }
             }
         }
-        Log.INFO.log("Loaded " + parsers.size() + " Parsers total");
+        Log.info("Loaded " + parsers.size() + " Parsers total");
         parsers.add(new RawParser());
         FileHelper.assureExistance(FileHelper.getJarPath() + "\\userdata");
         /*File[] brawlerFiles = new File(FileHelper.getJarPath()).listFiles((dir, name) -> {
@@ -129,14 +129,11 @@ public class ArchServer {
         }
     }
     public void savePending(List<String> pendingQuestions){
-        pendingQuestions.forEach(System.out::println);
-        try {
-            FileUtils.cleanDirectory(new File(FileHelper.getJarPath() + "\\processingquestions"));
+        try {FileUtils.cleanDirectory(new File(FileHelper.getJarPath() + "\\processingquestions"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            Files.write(Paths.get(new File(FileHelper.getJarPath() + "\\processingquestions\\processingquestions").toString()), pendingQuestions);
+        try {Files.write(Paths.get(new File(FileHelper.getJarPath() + "\\processingquestions\\processingquestions").toString()), pendingQuestions);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -74,7 +74,7 @@ public class ReviewRoom implements IListener<MessageReceivedEvent> {
                 }
                 this.msg("Question: \"" + this.pendingQuestion.getQuestion().question() + "\"\n" +
                         "Parser: \"" + this.pendingQuestion.getParserID() + "\"\n" +
-                        "Raw: \"" + this.pendingQuestion.getRaw() + "\"\n" +// TODO ADD RAW TO QUESTION
+                        "Raw: \"" + this.pendingQuestion.getRaw() + "\"\n" +
                         "Answer: \"" + this.pendingQuestion.getQuestion().answer() + "\"\n" +
                         "Attributes: " + this.pendingQuestion.getQuestion().type() + " " + this.pendingQuestion.getQuestion().difficulty() + " " + this.pendingQuestion.getQuestion().topic());
             }else if (s.startsWith("approve")){

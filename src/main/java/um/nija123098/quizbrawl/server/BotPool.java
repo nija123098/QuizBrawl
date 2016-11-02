@@ -55,7 +55,7 @@ public class BotPool {
             future.grant(this.available.remove(0));
         }else{
             this.futures.add(future);
-            Log.WARN.log("Bot shortage by " + this.futures.size());
+            Log.warn("Bot shortage by " + this.futures.size());
         }
         return future;
     }

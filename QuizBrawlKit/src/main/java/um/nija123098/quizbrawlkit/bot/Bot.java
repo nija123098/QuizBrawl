@@ -13,4 +13,5 @@ public interface Bot {
     void onClientLeave(Client client);
     void onClientTyping(Client client);
     boolean botOptimal(String name);
+    String makerID();
 }

@@ -19,6 +19,7 @@ public class BaseBot implements Bot, Runnable {
     static {
         fileMap = new HashMap<Question, File>();
     }
+    private List<Question> exclusions;
     private volatile long qLength;
     private volatile Client attempter;
     private volatile boolean qMode;
@@ -34,6 +35,7 @@ public class BaseBot implements Bot, Runnable {
         this.difficulties = EnumSet.allOf(Difficulty.class);
         this.types = EnumSet.allOf(Type.class);
         this.topics = EnumSet.allOf(Topic.class);
+        this.exclusions = new ArrayList<Question>(3);
     }
     @Override
     public void init(BotLink botLink) {
@@ -171,6 +173,10 @@ public class BaseBot implements Bot, Runnable {
     public boolean botOptimal(String name) {
         return true;
     }
+    @Override
+    public String makerID(){
+        return "191677220027236352";
+    }
     public void updateStatus(){
         String s = "Playing ";
         if (this.types.size() == Type.values().length){
@@ -249,9 +255,15 @@ public class BaseBot implements Bot, Runnable {
         this.answer("INCORRECT ANSWER", this.attempter);
     }
     private void next(){
-        Question question;
-        if ((question = this.link.getQuestion(this.difficulties, this.topics, this.types)) == this.question && !question.answer().equals("unfound")){
+        Question question = this.link.getQuestion(this.difficulties, this.topics, this.types, this.exclusions);
+        if (question.answer().equals("unfound")){
+            this.exclusions.remove(0);
             this.next();
+        }else{
+            if (this.exclusions.size() > 3){
+                this.exclusions.remove(0);
+            }
+            this.exclusions.add(question);
         }
         this.qMode = true;
         this.link.clearVoice();

@@ -31,6 +31,9 @@ public class InfoChannel implements InfoLink {
     }
     @EventSubscriber
     public void handle(PresenceUpdateEvent event){
+        if (event.getUser().isBot() || event.getUser().equals(this.guild.getOwner())){
+            return;
+        }
         boolean onOld = !event.getOldPresence().equals(Presences.OFFLINE);
         boolean onNew = !event.getNewPresence().equals(Presences.OFFLINE);
         if (onOld != onNew){

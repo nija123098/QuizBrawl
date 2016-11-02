@@ -42,6 +42,15 @@ public class QuizProvider {
         }
         return questions.get(Ref.getInt(questions.size() - 1));
     }
+    public Question getQuestion(EnumSet<Difficulty> difficulties, EnumSet<Topic> topics, EnumSet<Type> types, List<Question> exclusions){
+        List<Question> questions = new ArrayList<Question>(this.questions.size() / Difficulty.values().length / Topic.values().length / Type.values().length);
+        questions.addAll(this.questions.stream().filter(question -> difficulties.contains(question.difficulty()) && topics.contains(question.topic()) && types.contains(question.type())).collect(Collectors.toList()));
+        questions.removeAll(exclusions);
+        if (questions.size() == 0){
+            return new Unfound(difficulties, topics, types);
+        }
+        return questions.get(Ref.getInt(questions.size() - 1));
+    }
     protected void addQuestion(Question question){
         if (question != null){
             this.questions.add(question);

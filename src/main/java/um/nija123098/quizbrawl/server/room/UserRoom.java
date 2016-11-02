@@ -41,6 +41,7 @@ public class UserRoom implements IListener<Event> {// should change to command s
                     .addAllow(Permissions.SEND_MESSAGES)
                     .addAllow(Permissions.READ_MESSAGES)
                     .addAllow(Permissions.READ_MESSAGE_HISTORY).enact());
+            this.guild.getChannelByID(this.id).changeTopic("This is the main user page which only you can see");
         });
         RequestHandler.request(() -> this.client.user().addRole(this.guild.getRolesByName("user").get(0)));
         this.msg("It is recommended that you mute this server including mentions if you use the Discord mobile client due to mentions being broken on it.\nTo see a list of commands just type \"help\".");

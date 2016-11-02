@@ -6,5 +6,5 @@ package um.nija123098.quizbrawlkit.bot;
 public interface Achievement {// make this an interface
     boolean has(Client client);
     String name();
-    String dicription();
+    String description();
 }

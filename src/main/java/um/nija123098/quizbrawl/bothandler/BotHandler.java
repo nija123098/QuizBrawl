@@ -106,6 +106,10 @@ public class BotHandler implements BotLink {
         return this.provider.getQuestion(difficulties, topics, types);
     }
     @Override
+    public Question getQuestion(EnumSet<Difficulty> difficulties, EnumSet<Topic> topics, EnumSet<Type> types, List<Question> exclusions) {
+        return this.provider.getQuestion(difficulties, topics, types, exclusions);
+    }
+    @Override
     public void abandonRoom() {
         this.bot.onLeaveRoom();
         if (this.roomName() != null){

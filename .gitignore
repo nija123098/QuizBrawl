@@ -6,3 +6,4 @@ modules/
 samplefiles/
 *.xml
 *.iml
+src/main/java/com/

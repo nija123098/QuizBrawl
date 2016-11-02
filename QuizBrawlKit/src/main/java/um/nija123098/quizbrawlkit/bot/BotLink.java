@@ -10,6 +10,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Made by Dev on 10/10/2016
@@ -21,6 +22,7 @@ public interface BotLink {
     void playVoice(File file) throws IOException, UnsupportedAudioFileException;
     void playVoice(AudioInputStream stream) throws IOException;
     Question getQuestion(EnumSet<Difficulty> difficulties, EnumSet<Topic> topics, EnumSet<Type> types);
+    Question getQuestion(EnumSet<Difficulty> difficulties, EnumSet<Topic> topics, EnumSet<Type> types, List<Question> exclusions);
     void abandonRoom();
     File getTempFile(String extension);
     Message messageRoom(String msg);

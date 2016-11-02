@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Made by Dev on 10/20/2016
+ * Made by nija123098 on 10/20/2016
  */
 public class BaseBot implements Bot, Runnable {
     private static final Map<Question, File> fileMap;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Made by Dev on 10/9/2016
+ * Made by nija123098 on 10/9/2016
  */
 public class Brawler {
     public String id;

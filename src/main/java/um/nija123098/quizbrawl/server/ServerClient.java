@@ -12,7 +12,7 @@ import um.nija123098.quizbrawl.server.services.ClientPool;
 import um.nija123098.quizbrawlkit.bot.Message;
 
 /**
- * Made by Dev on 10/9/2016
+ * Made by nija123098 on 10/9/2016
  */
 public class ServerClient {
     private ReviewRoom reviewRoom;

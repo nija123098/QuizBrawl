@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Made by Dev on 10/22/2016
+ * Made by nija123098 on 10/22/2016
  */
 public class StringHelper {
     public static String getList(List<String> list){

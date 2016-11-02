@@ -1,28 +1,30 @@
 package um.nija123098.quizbrawl.server.room;
 
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.Event;
-import sx.blah.discord.api.events.IListener;
+import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Permissions;
 import um.nija123098.quizbrawl.bothandler.MessageImpl;
-import um.nija123098.quizbrawl.server.services.BotFuture;
 import um.nija123098.quizbrawl.server.Server;
 import um.nija123098.quizbrawl.server.ServerClient;
+import um.nija123098.quizbrawl.server.services.BotFuture;
 import um.nija123098.quizbrawl.util.PermisionsHelper;
 import um.nija123098.quizbrawl.util.RequestHandler;
 import um.nija123098.quizbrawl.util.StringHelper;
 import um.nija123098.quizbrawlkit.bot.Message;
-import um.nija123098.quizbrawlkit.question.*;
+import um.nija123098.quizbrawlkit.question.Difficulty;
+import um.nija123098.quizbrawlkit.question.Result;
+import um.nija123098.quizbrawlkit.question.Topic;
+import um.nija123098.quizbrawlkit.question.Type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Made by Dev on 10/9/2016
+ * Made by nija123098 on 10/9/2016
  */
-public class UserRoom implements IListener<Event> {// should change to command structure
+public class UserRoom {// should change to command structure
     private IDiscordClient discordClient;
     private BotFuture future;
     private String id;// find some way to share commands between here and BotHandler
@@ -46,12 +48,10 @@ public class UserRoom implements IListener<Event> {// should change to command s
         RequestHandler.request(() -> this.client.user().addRole(this.guild.getRolesByName("user").get(0)));
         this.msg("It is recommended that you mute this server including mentions if you use the Discord mobile client due to mentions being broken on it.\nTo see a list of commands just type \"help\".");
     }
-    @Override
-    public void handle(Event event) {
-        if (event instanceof MessageReceivedEvent){
-            if (((MessageReceivedEvent) event).getMessage().getChannel().getID().equals(this.id)){
-                this.handle(((MessageReceivedEvent) event).getMessage().getContent());
-            }
+    @EventSubscriber
+    public void handle(MessageReceivedEvent event) {
+        if (event.getMessage().getChannel().getID().equals(this.id)){
+            this.handle(event.getMessage().getContent());
         }
     }
     private void handle(String handle){
@@ -61,7 +61,8 @@ public class UserRoom implements IListener<Event> {// should change to command s
                     "  join <room name> - joins a room with the given name\n" +
                     "  join <@moderator> - joins the current room of the mentioned moderator if the moderator is in use\n" +
                     "  join <room name> <@moderator> - joins a room with the mentioned moderator if the name and moderator are available\n" +
-                    "  stats <difficulty/type/topic/result> <difficulty/type/topic/result> <difficulty/type/topic/result>... - shows stats for the given question attributes");
+                    "  stats <difficulty/type/topic/result> <difficulty/type/topic/result> <difficulty/type/topic/result>... - shows stats for the given question attributes\n" +
+                    "  parser <type> - opens a room used to suggest questions where type is the type of question builder, raw by default");
         }else if (handle.startsWith("join ")){
             this.client.leave();
             if (this.future != null){
@@ -148,8 +149,12 @@ public class UserRoom implements IListener<Event> {// should change to command s
                 default:
                     this.msg("Not enough question attributes were specified or some were spelled wrong.  Please input three or four attributes for now.  Tables for two attributes will be in a future version.");
             }
-        }else if (handle.startsWith("parser ")){
-            this.client.set(new ParserRoom(this.discordClient, handle.substring(7), this.guild, this.client, this.server.getQuestionProcessor()));
+        }else if (handle.startsWith("parser")){
+            if (handle.length() == 6){
+                this.client.set(new ParserRoom(this.discordClient, "raw", this.guild, this.client, this.server.getQuestionProcessor()));
+            }else{
+                this.client.set(new ParserRoom(this.discordClient, handle.substring(7), this.guild, this.client, this.server.getQuestionProcessor()));
+            }
         }else if (handle.startsWith("review")){
             if (this.client.user().getRolesForGuild(this.guild).contains(this.guild.getRolesByName("reviewer").get(0))){
                 this.client.set(new ReviewRoom(this.discordClient, this.guild, this.client, this.server));

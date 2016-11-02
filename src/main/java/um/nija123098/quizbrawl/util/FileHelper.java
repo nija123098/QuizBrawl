@@ -16,7 +16,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Made by Dev on 10/13/2016
+ * Made by nija123098 on 10/13/2016
  */
 public class FileHelper {
     static {

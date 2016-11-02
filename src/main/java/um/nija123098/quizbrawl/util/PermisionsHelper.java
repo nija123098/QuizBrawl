@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 
 /**
- * Made by Dev on 10/12/2016
+ * Made by nija123098 on 10/12/2016
  */
 public class PermisionsHelper {
     private EnumSet<Permissions> allow;

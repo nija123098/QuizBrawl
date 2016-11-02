@@ -12,7 +12,7 @@ import um.nija123098.quizbrawlkit.bot.Team;
 import um.nija123098.quizbrawlkit.question.*;
 
 /**
- * Made by Dev on 10/10/2016
+ * Made by nija123098 on 10/10/2016
  */
 public class ClientImpl implements Client {
     private Team team;

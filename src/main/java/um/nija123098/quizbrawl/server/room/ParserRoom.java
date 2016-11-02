@@ -16,7 +16,7 @@ import um.nija123098.quizbrawlkit.bot.Message;
 import um.nija123098.quizbrawlkit.question.Parser;
 
 /**
- * Made by Dev on 10/30/2016
+ * Made by nija123098 on 10/30/2016
  */
 public class ParserRoom implements IListener<MessageReceivedEvent> {
     private Parser parser;

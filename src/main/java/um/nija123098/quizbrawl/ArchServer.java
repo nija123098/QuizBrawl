@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Made by Dev on 10/13/2016
+ * Made by nija123098 on 10/13/2016
  */
 public class ArchServer {
     private Server server;

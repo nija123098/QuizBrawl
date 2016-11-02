@@ -6,7 +6,7 @@ import um.nija123098.quizbrawl.util.RequestHandler;
 import um.nija123098.quizbrawlkit.bot.Message;
 
 /**
- * Made by Dev on 10/11/2016
+ * Made by nija123098 on 10/11/2016
  */
 public class MessageImpl implements Message {
     private volatile String id;

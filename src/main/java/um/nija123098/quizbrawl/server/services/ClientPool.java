@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Made by Dev on 10/13/2016
+ * Made by nija123098 on 10/13/2016
  */
 public class ClientPool implements IListener<PresenceUpdateEvent>{
     private List<ServerClient> clients;

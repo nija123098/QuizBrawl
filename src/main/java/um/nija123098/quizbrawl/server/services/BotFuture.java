@@ -8,7 +8,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Made by Dev on 10/10/2016
+ * Made by nija123098 on 10/10/2016
  */
 public class BotFuture implements Future<BotHandler> {
     private volatile BotHandler bot;

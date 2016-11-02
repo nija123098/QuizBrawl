@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Made by Dev on 10/10/2016
+ * Made by nija123098 on 10/10/2016
  */
 public class BotHandler implements BotLink {
     private String name = "unknown";

@@ -10,7 +10,7 @@ import sx.blah.discord.handle.obj.*;
 import um.nija123098.quizbrawl.util.RequestHandler;
 
 /**
- * Made by Dev on 10/9/2016
+ * Made by nija123098 on 10/9/2016
  */
 public class InfoChannel implements InfoLink {
     private static final String FORMAT = "Welcome to the Quiz Brawl server.\n" +

@@ -3,7 +3,7 @@ package um.nija123098.quizbrawl.util;
 import sx.blah.discord.Discord4J;
 
 /**
- * Made by Dev on 10/10/2016
+ * Made by nija123098 on 10/10/2016
  */
 public class Log {
     public static void trace(String s){

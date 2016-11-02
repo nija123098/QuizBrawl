@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Made by Dev on 10/10/2016
+ * Made by nija123098 on 10/10/2016
  */
 public class BotPool {
     private volatile List<BotHandler> all, available;

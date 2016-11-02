@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Made by Dev on 10/9/2016
+ * Made by nija123098 on 10/9/2016
  */
 public class QuizProvider {
     private final List<Brawler> brawlers;

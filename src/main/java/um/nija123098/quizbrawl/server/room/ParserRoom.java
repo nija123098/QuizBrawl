@@ -1,4 +1,4 @@
-package um.nija123098.quizbrawl.server;
+package um.nija123098.quizbrawl.server.room;
 
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.IListener;
@@ -9,6 +9,7 @@ import sx.blah.discord.handle.obj.Permissions;
 import um.nija123098.quizbrawl.bothandler.LimitedClientImpl;
 import um.nija123098.quizbrawl.bothandler.MessageImpl;
 import um.nija123098.quizbrawl.quizprovider.PendingQuestionProcessor;
+import um.nija123098.quizbrawl.server.ServerClient;
 import um.nija123098.quizbrawl.util.PermisionsHelper;
 import um.nija123098.quizbrawl.util.RequestHandler;
 import um.nija123098.quizbrawlkit.bot.Message;

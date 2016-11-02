@@ -1,4 +1,4 @@
-package um.nija123098.quizbrawl.server;
+package um.nija123098.quizbrawl.server.services;
 
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.IListener;
@@ -7,6 +7,8 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Presences;
 import um.nija123098.quizbrawl.quizprovider.QuizProvider;
+import um.nija123098.quizbrawl.server.Server;
+import um.nija123098.quizbrawl.server.ServerClient;
 
 import java.util.ArrayList;
 import java.util.List;

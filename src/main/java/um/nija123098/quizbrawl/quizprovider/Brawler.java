@@ -1,5 +1,6 @@
 package um.nija123098.quizbrawl.quizprovider;
 
+import um.nija123098.quizbrawl.server.services.InfoLink;
 import um.nija123098.quizbrawlkit.question.Difficulty;
 import um.nija123098.quizbrawlkit.question.Result;
 import um.nija123098.quizbrawlkit.question.Topic;
@@ -14,6 +15,7 @@ import java.util.List;
 public class Brawler {
     public String id;
     private final long[][][][] stats;
+    private InfoLink infoLink;
     public Brawler(String id) {
         this(id, new long[Difficulty.values().length][Topic.values().length][Type.values().length][Result.values().length]);
     }
@@ -25,6 +27,9 @@ public class Brawler {
         return this.stats[difficulty.ordinal()][topic.ordinal()][type.ordinal()][result.ordinal()];
     }
     public long process(Difficulty difficulty, Topic topic, Type type, Result result){
+        if (result == Result.CORRECT){
+            this.infoLink.addCorrect();
+        }
         return ++this.stats[difficulty.ordinal()][topic.ordinal()][type.ordinal()][result.ordinal()];
     }
     public static List<String> format(Brawler brawler){
@@ -70,6 +75,9 @@ public class Brawler {
             }
         }
         return new Brawler(strings.get(0), stats);
+    }
+    public void link(InfoLink infoLink) {
+        this.infoLink = infoLink;
     }
     private static class MBuilder{
         String s = "";

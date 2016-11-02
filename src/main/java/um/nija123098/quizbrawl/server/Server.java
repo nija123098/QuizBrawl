@@ -11,6 +11,10 @@ import um.nija123098.quizbrawl.ArchServer;
 import um.nija123098.quizbrawl.quizprovider.Brawler;
 import um.nija123098.quizbrawl.quizprovider.PendingQuestionProcessor;
 import um.nija123098.quizbrawl.quizprovider.QuizProvider;
+import um.nija123098.quizbrawl.server.services.BotFuture;
+import um.nija123098.quizbrawl.server.services.BotPool;
+import um.nija123098.quizbrawl.server.services.ClientPool;
+import um.nija123098.quizbrawl.server.services.InfoChannel;
 import um.nija123098.quizbrawl.util.Log;
 import um.nija123098.quizbrawl.util.RequestHandler;
 import um.nija123098.quizbrawlkit.bot.Bot;
@@ -31,15 +35,17 @@ public class Server implements IListener<Event>{
     private volatile QuizProvider quizProvider;
     private ClientPool clientPool;
     private IDiscordClient client;
+    private InfoChannel infoChannel;
     public Server(List<String> tokens, List<Brawler> brawlers, List<Bot> bots, List<Parser> parsers, List<String> questions, List<String> pendingQuestions, ArchServer arch) {
         this.arch = arch;
+        this.quizProvider = new QuizProvider(brawlers);
         RequestHandler.request(() -> {
             this.client = new ClientBuilder().withToken(tokens.get(0)).login();
             this.client.getDispatcher().registerListener(this);
-            new InfoChannel(this.client);
+            this.infoChannel = new InfoChannel(this.client);
+            this.botPool = new BotPool(tokens, bots, this, this.infoChannel);
+            this.quizProvider.link(this.infoChannel);
         });
-        this.quizProvider = new QuizProvider(brawlers);
-        this.botPool = new BotPool(tokens, bots, this);
         this.questionProcessor = new PendingQuestionProcessor(questions, pendingQuestions, parsers, this.quizProvider, this.arch);
     }
     @Override

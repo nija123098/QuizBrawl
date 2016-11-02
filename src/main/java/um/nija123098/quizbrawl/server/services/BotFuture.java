@@ -1,6 +1,7 @@
-package um.nija123098.quizbrawl.server;
+package um.nija123098.quizbrawl.server.services;
 
 import um.nija123098.quizbrawl.bothandler.BotHandler;
+import um.nija123098.quizbrawl.server.ServerClient;
 import um.nija123098.quizbrawl.util.Log;
 
 import java.util.concurrent.Future;

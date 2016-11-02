@@ -1,6 +1,8 @@
-package um.nija123098.quizbrawl.server;
+package um.nija123098.quizbrawl.server.services;
 
 import um.nija123098.quizbrawl.bothandler.BotHandler;
+import um.nija123098.quizbrawl.server.Server;
+import um.nija123098.quizbrawl.server.ServerClient;
 import um.nija123098.quizbrawl.util.Log;
 import um.nija123098.quizbrawlkit.bot.Bot;
 
@@ -13,10 +15,12 @@ import java.util.List;
 public class BotPool {
     private volatile List<BotHandler> all, available;
     private volatile List<BotFuture> futures;
-    public BotPool(List<String> tokens, List<Bot> bots, Server server){
+    private InfoLink infoLink;
+    public BotPool(List<String> tokens, List<Bot> bots, Server server, InfoLink infoLink){
         this.available = new ArrayList<BotHandler>(tokens.size() - 1);
         this.all = new ArrayList<BotHandler>(tokens.size() - 1);
         this.futures = new ArrayList<BotFuture>(1);
+        this.infoLink = infoLink;
         for (int i = 1; i < tokens.size(); i++) {
             this.all.add(new BotHandler(tokens.get(i), server, bots, this));
         }
@@ -65,6 +69,7 @@ public class BotPool {
         }else{
             this.available.add(bot);
         }
+        this.infoLink.setBotsAvailable(this.available.size());
     }
     public void unprovide(BotHandler botHandler) {
         for (int i = 0; i < this.available.size(); i++) {
@@ -72,6 +77,7 @@ public class BotPool {
                 this.available.remove(i);
             }
         }
+        this.infoLink.setBotsAvailable(this.available.size());
     }
     public void bind(ClientPool clientPool){
         for (BotHandler handler : this.all) {

@@ -1,5 +1,6 @@
 package um.nija123098.quizbrawl.quizprovider;
 
+import um.nija123098.quizbrawl.server.services.InfoLink;
 import um.nija123098.quizbrawl.util.Ref;
 import um.nija123098.quizbrawlkit.question.*;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 public class QuizProvider {
     private final List<Brawler> brawlers;
     private final List<Question> questions;
+    private InfoLink infoLink;
     public QuizProvider(List<Brawler> brawlers) {
         this.brawlers = brawlers;
         this.questions = new ArrayList<Question>(20);
@@ -26,15 +28,15 @@ public class QuizProvider {
         }
         return this.make(id);
     }
-    private Brawler make(String id){
+    private synchronized Brawler make(String id){
         Brawler brawler = new Brawler(id);
         this.brawlers.add(brawler);
+        brawler.link(this.infoLink);
         return brawler;
     }
     public Question getQuestion(EnumSet<Difficulty> difficulties, EnumSet<Topic> topics, EnumSet<Type> types){
         List<Question> questions = new ArrayList<Question>(this.questions.size() / Difficulty.values().length / Topic.values().length / Type.values().length);
-        // questions.addAll(this.questions.stream().filter(question -> difficulties.contains(question.difficulty()) && topics.contains(question.topic()) && types.contains(question.type())).collect(Collectors.toList()));
-        questions.addAll(this.questions.stream().filter(question -> difficulties.contains(question.difficulty())).filter(question1 -> topics.contains(question1.topic())).filter(question2 -> types.contains(question2.type())).collect(Collectors.toList()));
+        questions.addAll(this.questions.stream().filter(question -> difficulties.contains(question.difficulty()) && topics.contains(question.topic()) && types.contains(question.type())).collect(Collectors.toList()));
         if (questions.size() == 0){
             return new Unfound(difficulties, topics, types);
         }
@@ -47,6 +49,12 @@ public class QuizProvider {
     }
     public List<Brawler> getBrawlers() {
         return this.brawlers;
+    }
+    public synchronized void link(InfoLink infoLink){
+        this.infoLink = infoLink;
+        for (Brawler brawler : this.brawlers) {
+            brawler.link(this.infoLink);
+        }
     }
     private class Unfound implements Question{
         private EnumSet<Difficulty> dif;

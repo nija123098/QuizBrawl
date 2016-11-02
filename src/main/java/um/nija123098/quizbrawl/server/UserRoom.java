@@ -66,6 +66,10 @@ public class UserRoom implements IListener<Event> {// should change to command s
             if (handle.substring(5).startsWith("<@")){
                 this.future = this.server.requestRoomEnter(handle.replaceAll("<@", ":::::::").replaceAll(">", ":::::::").split(":::::::")[1], this.client);
             }else if (handle.contains("<@")){
+                if (!StringHelper.exclusiveLetters(handle.substring(5).split(" ")[0])){
+                    this.msg("Only letters are allowed in room names");
+                    return;
+                }
                 this.server.requestRoomEnter(handle.substring(5).split(" ")[0], handle.substring(5).split(" ")[1].replace("<@", "").replace(">", ""), this.client);
             }else{
                 this.future = this.server.requestRoomEnter(handle.split(" ")[1].toLowerCase(), this.client);

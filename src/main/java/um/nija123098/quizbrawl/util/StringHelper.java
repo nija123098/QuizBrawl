@@ -30,4 +30,13 @@ public class StringHelper {
         Collections.addAll(strings, list);
         return getList(strings);
     }
+    public static boolean exclusiveLetters(String s){
+        for (int i = 0; i < s.length(); i++) {
+            Character character = s.charAt(i);
+            if (!Character.isLetter(character)){
+                return false;
+            }
+        }
+        return true;// faster than name.matches("[a-zA-Z]+")
+    }
 }

@@ -167,6 +167,7 @@ public class BotHandler implements BotLink {
             this.connected = true;
             this.pool.provide(this);
         }
+        Log.INFO.log(this.name + " reconnected!");
     }
     @Override
     public File getTempFile(String extension){

@@ -5,7 +5,11 @@ import um.nija123098.quizbrawlkit.bot.Achievement;
 import um.nija123098.quizbrawlkit.bot.Bot;
 import um.nija123098.quizbrawlkit.bot.BotLink;
 import um.nija123098.quizbrawlkit.bot.Client;
-import um.nija123098.quizbrawlkit.question.*;
+import um.nija123098.quizbrawlkit.question.Difficulty;
+import um.nija123098.quizbrawlkit.question.Question;
+import um.nija123098.quizbrawlkit.question.Result;
+import um.nija123098.quizbrawlkit.question.Topic;
+import um.nija123098.quizbrawlkit.question.Type;
 
 import java.io.File;
 import java.util.*;
@@ -150,7 +154,6 @@ public class BaseBot implements Bot, Runnable {
     }
     @Override
     public void onLeaveRoom() {
-        // this.link.messageRoom("Bye everyone!");
         this.link.setStatus(null);
     }
     @Override

@@ -23,7 +23,6 @@ public class ClientImpl implements Client {
         this.guild = guild;
         this.handler = handler;
         this.client = client;
-        this.team = Team.NONE;
     }
     @Override
     public void add() {// may want to use permisions helper
@@ -35,16 +34,15 @@ public class ClientImpl implements Client {
     @Override
     public void kick() {
         if (this.handler != null){
-            try{
-                RequestHandler.request(() -> this.handler.getChannel().removePermissionsOverride(this.client.user()));
+            try{RequestHandler.request(() -> this.handler.getChannel().removePermissionsOverride(this.client.user()));
             }catch(NullPointerException ignored){
                 Log.warn("Attempted kicking a user from a imaginary room");
             }
-            try{
-                RequestHandler.request(() -> this.handler.getVoiceChannel().removePermissionsOverride(this.client.user()));
+            try{RequestHandler.request(() -> this.handler.getVoiceChannel().removePermissionsOverride(this.client.user()));
             }catch(NullPointerException ignored){
                 Log.warn("Attempted kicking a user from a imaginary voice room");
             }
+            this.setTeam(null);
             this.mute(false);
             this.deafen(false);
             this.handler.removeFromRoom(this);
@@ -79,9 +77,13 @@ public class ClientImpl implements Client {
     }
     @Override
     public void setTeam(Team team) {
-        RequestHandler.request(() -> this.client.user().removeRole(this.guild.getRolesByName(this.team.name().toLowerCase()).get(0)));
+        if (this.team != null){
+            RequestHandler.request(() -> this.client.user().removeRole(this.guild.getRolesByName(this.team.name().toLowerCase()).get(0)));
+        }
         this.team = team;
-        RequestHandler.request(() -> this.client.user().addRole(this.guild.getRolesByName(this.team.name().toLowerCase()).get(0)));
+        if (this.team != null){
+            RequestHandler.request(() -> this.client.user().addRole(this.guild.getRolesByName(this.team.name().toLowerCase()).get(0)));
+        }
     }
     @Override
     public void enableTyping(boolean enable) {

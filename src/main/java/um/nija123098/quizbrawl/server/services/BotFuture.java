@@ -2,8 +2,6 @@ package um.nija123098.quizbrawl.server.services;
 
 import um.nija123098.quizbrawl.bothandler.BotHandler;
 import um.nija123098.quizbrawl.server.ServerClient;
-import um.nija123098.quizbrawl.util.Log;
-import um.nija123098.quizbrawl.util.StringHelper;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -16,19 +14,21 @@ public class BotFuture implements Future<BotHandler> {
     private volatile boolean cancelled;
     private final String name;
     private final ServerClient client;
-    public BotFuture(String name, ServerClient client) {
+    private final BotPool botPool;
+    public BotFuture(String name, ServerClient client, BotPool botPool) {
         if (name.length() < 3){
             this.name = "room " + name;
-        }else if (name.length() > 99){
-            this.name = name.substring(0, 99);
+        }else if (name.length() > 35){
+            this.name = name.substring(0, 35);
         }else{
             this.name = name;
         }
         this.client = client;
+        this.botPool = botPool;
     }
     synchronized boolean grant(BotHandler bot){
-        boolean completed;
-        completed = this.isDone();
+        this.botPool.remove(this);
+        boolean completed = this.isDone();
         if (!completed){
             this.bot = bot;
             this.bot.setRoom(this.name, this.client);
@@ -37,12 +37,8 @@ public class BotFuture implements Future<BotHandler> {
     }
     @Override
     public synchronized boolean cancel(boolean mayInterruptIfRunning) {
-        if (this.isDone()){
-            this.client.leave();
-        }else{
-            Log.warn("Canceling " + StringHelper.getPossessive(this.client.name()) + " bot future which was not done");
-        }
         this.cancelled = true;
+        this.botPool.remove(this);
         return this.isDone();
     }
     @Override

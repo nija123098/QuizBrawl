@@ -32,7 +32,7 @@ public class BotPool {
                 return null;
             }
         }
-        BotFuture future = new BotFuture(name, client);
+        BotFuture future = new BotFuture(name, client, this);
         if (this.available.size() > 0){
             for (BotHandler handler : this.available) {
                 if (handler.getId().equals(id)) {
@@ -50,11 +50,10 @@ public class BotPool {
                 return null;
             }
         }
-        try{
-            Long.parseLong(name);
+        try{Long.parseLong(name);
             return null;
         }catch(Exception ignored){}
-        BotFuture future = new BotFuture(name, client);
+            BotFuture future = new BotFuture(name, client, this);
         if (this.available.size() > 0){
             future.grant(this.available.remove(0));
         }else{
@@ -79,6 +78,9 @@ public class BotPool {
         for (BotHandler handler : this.all) {
             handler.bind(clientPool);
         }
+    }
+    public void remove(BotFuture botFuture) {
+        this.futures.remove(botFuture);
     }
     public void close() {
         for (int i = 0; i < this.all.size(); i++) {

@@ -8,6 +8,7 @@ import um.nija123098.quizbrawl.quizprovider.Brawler;
 import um.nija123098.quizbrawl.server.room.ParserRoom;
 import um.nija123098.quizbrawl.server.room.ReviewRoom;
 import um.nija123098.quizbrawl.server.room.UserRoom;
+import um.nija123098.quizbrawl.server.services.BotFuture;
 import um.nija123098.quizbrawl.server.services.ClientPool;
 import um.nija123098.quizbrawlkit.bot.Message;
 
@@ -18,6 +19,7 @@ public class ServerClient {
     private ReviewRoom reviewRoom;
     private ParserRoom parserRoom;
     private Server server;
+    private BotFuture botFuture;
     private BotHandler botHandler;
     private UserRoom userRoom;
     private Brawler brawler;
@@ -42,6 +44,9 @@ public class ServerClient {
         this.leave();
         this.botHandler = botHandler;
     }
+    public void set(BotFuture botFuture){
+        this.botFuture = botFuture;
+    }
     public void set(ParserRoom parserRoom){
         if (!parserRoom.failed()){
             this.parserRoom = parserRoom;
@@ -52,6 +57,10 @@ public class ServerClient {
         this.reviewRoom = reviewRoom;
     }
     public void leave(){
+        if (this.botFuture != null){
+            this.botFuture.cancel(true);
+            this.botFuture = null;
+        }
         if (this.botHandler != null){
             this.botHandler.leave(this);
             this.botHandler = null;

@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class UserRoom {// should change to command structure
     private IDiscordClient discordClient;
-    private BotFuture future;
     private String id;// find some way to share commands between here and BotHandler
     private ServerClient client;
     private IGuild guild;
@@ -65,12 +64,8 @@ public class UserRoom {// should change to command structure
                     "  parser <type> - opens a room used to suggest questions where type is the type of question builder, raw by default");
         }else if (handle.startsWith("join ")){
             this.client.leave();
-            if (this.future != null){
-                this.future.cancel(true);
-                this.future = null;
-            }
             if (handle.substring(5).startsWith("<@")){
-                this.future = this.server.requestRoomEnter(handle.replaceAll("<@", ":::::::").replaceAll(">", ":::::::").split(":::::::")[1], this.client);
+                this.client.set(this.server.requestRoomEnter(handle.replaceAll("<@", ":::::::").replaceAll(">", ":::::::").split(":::::::")[1], this.client));
             }else if (handle.contains("<@")){
                 if (!StringHelper.exclusiveLetters(handle.substring(5).split(" ")[0])){
                     this.msg("Only letters are allowed in room names");
@@ -82,14 +77,10 @@ public class UserRoom {// should change to command structure
                     this.msg("Only letters are allowed in room names");
                     return;
                 }
-                this.future = this.server.requestRoomEnter(handle.split(" ")[1].toLowerCase(), this.client);
+                this.client.set(this.server.requestRoomEnter(handle.split(" ")[1].toLowerCase(), this.client));
             }
         }else if (handle.startsWith("leave")){
-            if (this.future != null){
-                this.future.cancel(true);
-                this.future = null;
-            }
-            // this.client.leave();
+            this.client.leave();
         }else if (handle.startsWith("stats ")){// multiple status of the same type should use recursion
             String[] strings = handle.substring(6).toUpperCase().split(" ");
             Difficulty difficulty = null;

@@ -8,16 +8,15 @@ import sx.blah.discord.handle.obj.Permissions;
 import um.nija123098.quizbrawl.bothandler.MessageImpl;
 import um.nija123098.quizbrawl.server.Server;
 import um.nija123098.quizbrawl.server.ServerClient;
-import um.nija123098.quizbrawl.server.services.BotFuture;
-import um.nija123098.quizbrawl.util.PermisionsHelper;
-import um.nija123098.quizbrawl.util.RequestHandler;
-import um.nija123098.quizbrawl.util.StringHelper;
+import um.nija123098.quizbrawl.util.*;
 import um.nija123098.quizbrawlkit.bot.Message;
 import um.nija123098.quizbrawlkit.question.Difficulty;
 import um.nija123098.quizbrawlkit.question.Result;
 import um.nija123098.quizbrawlkit.question.Topic;
 import um.nija123098.quizbrawlkit.question.Type;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +49,11 @@ public class UserRoom {// should change to command structure
     @EventSubscriber
     public void handle(MessageReceivedEvent event) {
         if (event.getMessage().getChannel().getID().equals(this.id)){
-            this.handle(event.getMessage().getContent());
+            if (event.getMessage().getAttachments().size() == 0){
+                this.handle(event.getMessage().getContent());
+            }else{
+
+            }
         }
     }
     private synchronized void handle(String handle){
@@ -61,7 +64,9 @@ public class UserRoom {// should change to command structure
                     "  join <@moderator> - joins the current room of the mentioned moderator if the moderator is in use\n" +
                     "  join <room name> <@moderator> - joins a room with the mentioned moderator if the name and moderator are available\n" +
                     "  stats <difficulty/type/topic/result> <difficulty/type/topic/result> <difficulty/type/topic/result>... - shows stats for the given question attributes\n" +
-                    "  parser <type> - opens a room used to suggest questions where type is the type of question builder, raw by default");
+                    "  parser <type> - opens a room used to suggest questions where type is the type of question builder, raw by default\n" +
+                    "  review - opens a room used to review suggested questions, this is only available for certified reviewers\n" +
+                    "  dev - uploads the QuizBrawlKit jar file for developing for the server");
         }else if (handle.startsWith("join ")){
             this.client.leave();
             if (handle.substring(5).startsWith("<@")){
@@ -155,6 +160,27 @@ public class UserRoom {// should change to command structure
         }else if (handle.startsWith("review")){
             if (this.client.user().getRolesForGuild(this.guild).contains(this.guild.getRolesByName("reviewer").get(0))){
                 this.client.set(new ReviewRoom(this.discordClient, this.guild, this.client, this.server));
+            }else{
+                this.msg("You are not a certified reviewer, dm " + this.guild.getOwner().mention() + " to apply");
+            }
+        }else if (handle.startsWith("dev")){
+            boolean found = false;
+            for (File file : new File(FileHelper.getJarPath()).listFiles()) {
+                if (!file.isDirectory() && file.getName().endsWith(".jar") && file.getName().contains("QuizBrawlKit-")){
+                    RequestHandler.request(() -> {
+                        try {this.guild.getChannelByID(this.id).sendFile(file);
+                        }catch(IOException e) {
+                            this.msg("There seems to have been an error uploading the jar, the developer has been notified");
+                            Log.error("Error uploading QuizBrawlKit jar: "  + e.getMessage());
+                        }
+                    });
+                    found = true;
+                    break;
+                }
+            }
+            if (!found){
+                this.msg("There seems to have been an error uploading the jar, the developer has been notified");
+                Log.error("No QuizBrawlKit jar in path!");
             }
         }
     }

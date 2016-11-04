@@ -160,10 +160,15 @@ public class BotHandler implements BotLink {
         this.pool.unprovide(this);
         try{this.abandonRoom();
         }catch(Exception ignored){}
+        String behaviorName;
+        try{behaviorName = this.bot.getClass().getSimpleName();
+        }catch(NullPointerException e){
+            behaviorName = "NO BOT BEHAVIOR";
+        }
         if (!event.getReason().name().equals("LOGGED_OUT")){
-            Log.error(this.name + " using " + this.bot.getClass().getSimpleName() + " disconnected because of " + ((DiscordDisconnectedEvent) event).getReason().name());
+            Log.error(this.name + " using " + behaviorName + " disconnected because of " + event.getReason().name());
         }else{
-            Log.info(this.name + " using " + this.bot.getClass().getSimpleName() + " logged out");
+            Log.info(this.name + " using " + behaviorName + " logged out");
         }
     }
     @EventSubscriber

@@ -25,6 +25,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ArchServer {
     private Server server;
     public ArchServer(String path) throws Exception{
+        FileHelper.ensureExistence(path + "\\bots");
+        FileHelper.ensureExistence(path + "\\parsers");
+        FileHelper.ensureExistence(FileHelper.getJarPath() + "\\userdata");
+        FileHelper.ensureExistence(FileHelper.getJarPath() + "\\processingquestions");
+        FileHelper.ensureExistence(FileHelper.getJarPath() + "\\questions");
         List<String> tokens;
         try{
             tokens = Files.readAllLines(Paths.get(FileHelper.getJarPath(), "Tokens.txt"));
@@ -32,29 +37,14 @@ public class ArchServer {
             Files.createFile(Paths.get(FileHelper.getJarPath(), "Tokens.txt"));
             System.out.println("Please place tokens in \"Tokens.txt\"");
             return;
-        }/*
-        List<QuestionPack> packs = new ArrayList<QuestionPack>();
-        File[] pFiles = new File(path + "\\questionpacks").listFiles();
-        if (pFiles != null){
-            for (int i = 0; i < pFiles.length; i++) {
-                if (pFiles[i].getName().endsWith(".jar")){
-                    int count = packs.size();
-                    packs.addAll(FileHelper.grabInstances(QuestionPack.class, pFiles[i].getPath()));
-                    Log.INFO.log("Loaded " + (packs.size() - count) + " QuestionPacks from " + pFiles[i].getName());
-                }
-            }
         }
-        Log.INFO.log("Loaded " + packs.size() + " QuestionPacks total");
-        if (packs.size() == 0){
-            packs.add(new DefaultQuestionPack());
-        }*/
         List<Bot> bots = new CopyOnWriteArrayList<Bot>();
         File[] bFiles = new File(path + "\\bots").listFiles();
         if (bFiles != null){
             for (int i = 0; i < bFiles.length; i++) {
                 if (bFiles[i].getName().endsWith(".jar")){
                     int count = bots.size();
-                    // bots.addAll(FileHelper.grabInstances(Bot.class, bFiles[i].getPath()));
+                    bots.addAll(FileHelper.grabInstances(Bot.class, bFiles[i].getPath()));
                     Log.info("Loaded " + (bots.size() - count) + " Bots from "  + bFiles[i].getName());
                 }
             }
@@ -76,22 +66,16 @@ public class ArchServer {
         }
         Log.info("Loaded " + parsers.size() + " Parsers total");
         parsers.add(new RawParser());
-        FileHelper.assureExistance(FileHelper.getJarPath() + "\\userdata");
-        /*File[] brawlerFiles = new File(FileHelper.getJarPath()).listFiles((dir, name) -> {
-            return name.equals("userdata");
-        })[0].listFiles();*/
         File[] brawlerFiles = new File(Paths.get(FileHelper.getJarPath(), "userdata").toString()).listFiles();
         List<Brawler> brawlers = new ArrayList<Brawler>(brawlerFiles.length);
         for (File file : brawlerFiles) {
             brawlers.add(Brawler.parse(Files.readAllLines(file.toPath())));
         }
-        FileHelper.assureExistance(FileHelper.getJarPath() + "\\processingquestions");
         File[] pQFiles = new File(Paths.get(FileHelper.getJarPath(), "processingquestions").toString()).listFiles();
         List<String> pendingQuestions = new ArrayList<String>(pQFiles.length);
         for (File file : pQFiles) {
             pendingQuestions.addAll(Files.readAllLines(file.toPath()));
         }
-        FileHelper.assureExistance(FileHelper.getJarPath() + "\\questions");
         File[] qFiles = new File(Paths.get(FileHelper.getJarPath(), "questions").toString()).listFiles();
         List<String> questions = new ArrayList<String>(qFiles.length);
         for (File file : qFiles) {

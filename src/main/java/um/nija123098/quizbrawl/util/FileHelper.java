@@ -67,10 +67,12 @@ public class FileHelper {
         }
         return instances;
     }
-    public static void assureExistance(String path) throws IOException {
-        if (!Files.exists(Paths.get(path))) {
+    public static boolean ensureExistence(String path) throws IOException {
+        boolean existed;
+        if (!(existed = Files.exists(Paths.get(path)))) {
             Files.createDirectory(Paths.get(path));
         }
+        return existed;
     }
     private static class Object{
         public Object() {

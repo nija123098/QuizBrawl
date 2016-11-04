@@ -77,6 +77,10 @@ public class UserRoom {// should change to command structure
                 }
                 this.server.requestRoomEnter(handle.substring(5).split(" ")[0], handle.substring(5).split(" ")[1].replace("<@", "").replace(">", ""), this.client);
             }else{
+                if (!StringHelper.exclusiveLetters(handle.substring(5))){
+                    this.msg("Only letters are allowed in room names");
+                    return;
+                }
                 this.future = this.server.requestRoomEnter(handle.split(" ")[1].toLowerCase(), this.client);
             }
         }else if (handle.startsWith("leave")){

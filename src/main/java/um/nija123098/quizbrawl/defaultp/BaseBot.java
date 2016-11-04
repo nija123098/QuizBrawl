@@ -12,7 +12,11 @@ import um.nija123098.quizbrawlkit.question.Topic;
 import um.nija123098.quizbrawlkit.question.Type;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -208,7 +212,10 @@ public class BaseBot implements Bot, Runnable {
         s += " topics";
         this.link.setRoomInfo(s);
     }
-    private void answer(String attempt, Client attempter){
+    private synchronized void answer(String attempt, Client attempter){
+        if (this.wrong.contains(attempter)){
+            return;
+        }
         this.buzz(attempter);
         Result result = this.question.result(attempt);
         this.attempter.attempt(result, this.question);

@@ -130,16 +130,16 @@ public class BotHandler implements BotLink {
         this.connected = true;
         this.guild = event.getGuild();
         this.player = new AudioPlayer(this.guild);
-        this.pool.provide(this);
-        this.bots.stream().filter(b -> b.botOptimal(this.discordClient.getOurUser().getName())).limit(1).forEach(b -> {
+        this.name = this.discordClient.getOurUser().getName();
+        this.bots.stream().filter(b -> b.botOptimal(this.name)).limit(1).forEach(b -> {
             this.bot = b;
             this.bots.remove(b);
             this.bots = null;
         });
         this.reattemptBotBind();
-        this.bot.init(this);
-        this.name = this.discordClient.getOurUser().getName();
+        this.bindBot();
         Log.info("Bot type " + this.bot.getClass().getSimpleName() + " inited with " + this.name + "'" + (!this.name.endsWith("s") ? "s" : "") + " profile");
+        this.pool.provide(this);
     }
     @EventSubscriber
     public void handle(MessageReceivedEvent event){
@@ -196,6 +196,9 @@ public class BotHandler implements BotLink {
             this.bot = this.bots.remove(Ref.getInt(this.bots.size()));
         }*/
     }
+    public void bindBot(){
+        this.bot.init(this);
+    }
     IChannel getChannel(){
         return this.guild.getChannelByID(this.chan);
     }
@@ -205,7 +208,7 @@ public class BotHandler implements BotLink {
     public void setRoom(String s, ServerClient client){
         RequestHandler.request(() -> this.chan = this.guild.createChannel(s).getID());
         RequestHandler.request(() -> {
-            voiceChan = guild.createVoiceChannel(s).getID();
+            this.voiceChan = this.guild.createVoiceChannel(s).getID();
             getVoiceChannel().join();
             this.bot.onNewRoom(s);
             requestJoin(client);

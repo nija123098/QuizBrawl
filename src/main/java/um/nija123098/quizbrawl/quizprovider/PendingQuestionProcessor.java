@@ -102,6 +102,23 @@ public class PendingQuestionProcessor implements QuestionProcessor {
             }
         }
     }
+    public void deny(PendingQuestion pendingQuestion) {
+        this.pendingQuestions.remove(pendingQuestion);
+    }
+    public boolean edit(PendingQuestion pendingQuestion, String newRaw, String editor) {
+        for (Parser parser : this.parsers) {
+            if (pendingQuestion.getParserID().equals(parser.id())){
+                Question question = parser.parse(newRaw);
+                if (question != null){
+                    this.pendingQuestions.add(this.parse(parser.id() + ":" + editor + ":" + newRaw));
+                    this.pendingQuestions.remove(pendingQuestion);
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
     public void save(){
         List<String> strings = new ArrayList<String>(this.pendingQuestions.size());
         this.pendingQuestions.forEach(pendingQuestion -> strings.add(this.format(pendingQuestion)));

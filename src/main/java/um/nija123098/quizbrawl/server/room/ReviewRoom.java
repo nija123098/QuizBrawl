@@ -61,7 +61,8 @@ public class ReviewRoom implements IListener<MessageReceivedEvent> {
                 this.msg("Commands:\n" +
                         "  leave - leaves the current reviewchannel\n" +
                         "  next - goes to the next pending question\n" +
-                        "  approve - approves the current question");
+                        "  approve - approves the current question\n" +
+                        "  deny - removes the current question");
                         /*
                         "  add <attribute/parser> - adds qualifiers to filter\n" +
                         "  remove <attribute/parser> - removes qualifiers from filter"
@@ -81,6 +82,17 @@ public class ReviewRoom implements IListener<MessageReceivedEvent> {
                         "Attributes: " + this.pendingQuestion.getQuestion().type() + " " + this.pendingQuestion.getQuestion().difficulty() + " " + this.pendingQuestion.getQuestion().topic());
             }else if (s.startsWith("approve")){
                 this.pendingQuestion.setReviewed(this.client.id());
+                this.pendingQuestion = null;
+            }else if (s.startsWith("deny")){
+                this.questionProcessor.deny(this.pendingQuestion);
+                this.pendingQuestion = null;
+            }else if (s.startsWith("edit ")){
+                if (this.questionProcessor.edit(this.pendingQuestion, s.substring(5), this.client.id())){
+                    this.msg("Edits successful");
+                }else{
+                    this.msg("Edits failed");
+                }
+                this.pendingQuestion = null;
             }
         }
     }

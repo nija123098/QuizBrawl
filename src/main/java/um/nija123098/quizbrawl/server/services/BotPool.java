@@ -13,9 +13,9 @@ import java.util.List;
  * Made by nija123098 on 10/10/2016
  */
 public class BotPool {
-    private volatile List<BotHandler> all, available;
-    private volatile List<BotFuture> futures;
-    private InfoLink infoLink;
+    private final List<BotHandler> all, available;
+    private final List<BotFuture> futures;
+    private final InfoLink infoLink;
     public BotPool(List<String> tokens, List<Bot> bots, Server server, InfoLink infoLink){
         this.available = new ArrayList<BotHandler>(tokens.size() - 1);
         this.all = new ArrayList<BotHandler>(tokens.size() - 1);
@@ -72,11 +72,7 @@ public class BotPool {
         this.infoLink.setBotsAvailable(this.available.size());
     }
     public void unprovide(BotHandler botHandler) {
-        for (int i = 0; i < this.available.size(); i++) {
-            if (this.available.get(i) == botHandler){
-                this.available.remove(i);
-            }
-        }
+        this.available.remove(botHandler);
         this.infoLink.setBotsAvailable(this.available.size());
     }
     public void bind(ClientPool clientPool){

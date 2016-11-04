@@ -54,7 +54,7 @@ public class UserRoom {// should change to command structure
             this.handle(event.getMessage().getContent());
         }
     }
-    private void handle(String handle){
+    private synchronized void handle(String handle){
         handle = handle.toLowerCase();
         if (handle.contains("help")){
             this.msg("Commands:\n" +
@@ -67,6 +67,7 @@ public class UserRoom {// should change to command structure
             this.client.leave();
             if (this.future != null){
                 this.future.cancel(true);
+                this.future = null;
             }
             if (handle.substring(5).startsWith("<@")){
                 this.future = this.server.requestRoomEnter(handle.replaceAll("<@", ":::::::").replaceAll(">", ":::::::").split(":::::::")[1], this.client);
@@ -86,8 +87,9 @@ public class UserRoom {// should change to command structure
         }else if (handle.startsWith("leave")){
             if (this.future != null){
                 this.future.cancel(true);
+                this.future = null;
             }
-            this.client.leave();
+            // this.client.leave();
         }else if (handle.startsWith("stats ")){// multiple status of the same type should use recursion
             String[] strings = handle.substring(6).toUpperCase().split(" ");
             Difficulty difficulty = null;

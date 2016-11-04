@@ -3,6 +3,7 @@ package um.nija123098.quizbrawl.server.services;
 import um.nija123098.quizbrawl.bothandler.BotHandler;
 import um.nija123098.quizbrawl.server.ServerClient;
 import um.nija123098.quizbrawl.util.Log;
+import um.nija123098.quizbrawl.util.StringHelper;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +37,10 @@ public class BotFuture implements Future<BotHandler> {
     }
     @Override
     public synchronized boolean cancel(boolean mayInterruptIfRunning) {
-        Log.warn("Canceling " + this.client.name() + "'s bot future which was " + (this.isDone() ? "not" : "") + " done");
         if (this.isDone()){
-            this.bot.abandonRoom();
+            this.client.leave();
+        }else{
+            Log.warn("Canceling " + StringHelper.getPossessive(this.client.name()) + " bot future which was not done");
         }
         this.cancelled = true;
         return this.isDone();

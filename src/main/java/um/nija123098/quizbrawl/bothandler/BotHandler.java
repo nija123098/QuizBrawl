@@ -18,6 +18,7 @@ import um.nija123098.quizbrawl.server.ServerClient;
 import um.nija123098.quizbrawl.util.FileHelper;
 import um.nija123098.quizbrawl.util.Log;
 import um.nija123098.quizbrawl.util.RequestHandler;
+import um.nija123098.quizbrawl.util.StringHelper;
 import um.nija123098.quizbrawlkit.bot.Bot;
 import um.nija123098.quizbrawlkit.bot.BotLink;
 import um.nija123098.quizbrawlkit.bot.Client;
@@ -37,7 +38,7 @@ import java.util.*;
  * Made by nija123098 on 10/10/2016
  */
 public class BotHandler implements BotLink {
-    private String name = "unknown";
+    private volatile String name = "unknown";
     private boolean connected;
     private List<ClientImpl> clientImpls;
     private BotPool pool;
@@ -138,7 +139,7 @@ public class BotHandler implements BotLink {
         });
         this.reattemptBotBind();
         this.bindBot();
-        Log.info("Bot type " + this.bot.getClass().getSimpleName() + " inited with " + this.name + "'" + (!this.name.endsWith("s") ? "s" : "") + " profile");
+        Log.info("Bot type " + this.bot.getClass().getSimpleName() + " inited with " + StringHelper.getPossessive(this.name) + " profile");
         this.pool.provide(this);
     }
     @EventSubscriber
@@ -206,12 +207,15 @@ public class BotHandler implements BotLink {
         return this.guild.getVoiceChannelByID(this.voiceChan);
     }
     public void setRoom(String s, ServerClient client){
-        RequestHandler.request(() -> this.chan = this.guild.createChannel(s).getID());
+        this.pool.unprovide(this);
         RequestHandler.request(() -> {
-            this.voiceChan = this.guild.createVoiceChannel(s).getID();
-            getVoiceChannel().join();
-            this.bot.onNewRoom(s);
-            requestJoin(client);
+            this.chan = this.guild.createChannel(s).getID();
+            RequestHandler.request(() -> {
+                this.voiceChan = this.guild.createVoiceChannel(s).getID();
+                getVoiceChannel().join();
+                this.bot.onNewRoom(s);
+                requestJoin(client);
+            });
         });
         Log.info(this.name + " started room " + s + " for " + client.name());
     }
@@ -231,7 +235,7 @@ public class BotHandler implements BotLink {
         this.clientImpls.remove(client);
         if (this.clientImpls.size() == 0){
             this.abandonRoom();
-            Log.info("Closing " + this.name + "' room because there are no more clients");
+            Log.info("Closing " + StringHelper.getPossessive(this.name) + " room because there are no more clients");
         }
     }
     public void leave(ServerClient client) {

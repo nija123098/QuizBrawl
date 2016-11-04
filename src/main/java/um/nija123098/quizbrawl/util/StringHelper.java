@@ -39,4 +39,7 @@ public class StringHelper {
         }
         return true;// faster than name.matches("[a-zA-Z]+")
     }
+    public static String getPossessive(String name){
+        return name + "'" + (name.endsWith("s") ? "" : "s");
+    }
 }

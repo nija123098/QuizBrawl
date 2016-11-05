@@ -45,10 +45,11 @@ public class BotPool {
     }
     public BotFuture getBot(String name, ServerClient client){
         for (BotHandler handler : this.all) {
-            if (name.equals(handler.roomName()) || handler.getId().equals(name)){
-                handler.requestJoin(client);
-                return null;
-            }
+            try{if (name.equals(handler.roomName()) || handler.getId().equals(name)){
+                    handler.requestJoin(client);
+                    return null;
+                }
+            }catch(Exception ignored){}
         }
         try{Long.parseLong(name);
             return null;

@@ -38,15 +38,22 @@ public class Server implements IListener<Event>{
     private InfoChannel infoChannel;
     public Server(List<String> tokens, List<Brawler> brawlers, List<Bot> bots, List<Parser> parsers, List<String> questions, List<String> pendingQuestions, ArchServer arch) {
         this.arch = arch;
-        this.quizProvider = new QuizProvider(brawlers);
         RequestHandler.request(() -> {
             this.client = new ClientBuilder().withToken(tokens.get(0)).login();
+            Log.addLogChannel(new LogChannel(this.client));
+            this.quizProvider = new QuizProvider(brawlers);
             this.client.getDispatcher().registerListener(this);
             this.infoChannel = new InfoChannel(this.client);
             this.botPool = new BotPool(tokens, bots, this, this.infoChannel);
             this.quizProvider.link(this.infoChannel);
         });
         this.questionProcessor = new PendingQuestionProcessor(questions, pendingQuestions, parsers, this.quizProvider, this.arch);
+        new Timer("Savior").schedule(new TimerTask() {
+            @Override
+            public void run() {
+                save();
+            }
+        }, 3600000);
     }
     @Override
     public void handle(Event event) {
@@ -95,8 +102,7 @@ public class Server implements IListener<Event>{
         }catch(Exception e){
             e.printStackTrace();
         }
-        try{
-            this.guild.getChannelsByName("userchannel").forEach(iChannel -> RequestHandler.request(() -> iChannel.delete()));
+        try{this.guild.getChannelsByName("userchannel").forEach(iChannel -> RequestHandler.request(() -> iChannel.delete()));
             RequestHandler.request(() -> this.client.logout());
         }catch(Exception e){
             e.printStackTrace();

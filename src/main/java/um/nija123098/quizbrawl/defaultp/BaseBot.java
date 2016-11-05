@@ -267,13 +267,16 @@ public class BaseBot implements Bot, Runnable {
     private void next(){
         Question question = this.link.getQuestion(this.difficulties, this.topics, this.types, this.exclusions);
         if (question.answer().equals("unfound")){
-            this.exclusions.remove(0);
-            this.next();
-        }else{
-            if (this.exclusions.size() > 3){
+            if (this.exclusions.size() > 0){
                 this.exclusions.remove(0);
+                this.next();
+                return;
             }
+        }else{
             this.exclusions.add(question);
+        }
+        if (this.exclusions.size() > 3){
+            this.exclusions.remove(0);
         }
         this.qMode = true;
         this.link.clearVoice();

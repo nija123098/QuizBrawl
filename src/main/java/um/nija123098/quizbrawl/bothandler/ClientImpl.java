@@ -87,7 +87,6 @@ public class ClientImpl implements Client {
     }
     @Override
     public void enableTyping(boolean enable) {
-        Log.debug((enable ? "allowing" : "disallowing") + " " + this.getName() + "'s tying permisions");
         PermisionsHelper helper = new PermisionsHelper(this.client.user(), this.handler.getChannel()).addAllow(Permissions.READ_MESSAGES);
         if (enable){
             helper.addAllow(Permissions.SEND_MESSAGES);

@@ -52,7 +52,7 @@ public class UserRoom {// should change to command structure
             if (event.getMessage().getAttachments().size() == 0){
                 this.handle(event.getMessage().getContent());
             }else{
-
+                Log.info("File " + event.getMessage().getAttachments().get(0).getFilename() + " was uploaded");
             }
         }
     }
@@ -62,7 +62,7 @@ public class UserRoom {// should change to command structure
             this.msg("Commands:\n" +
                     "  join <room name> - joins a room with the given name\n" +
                     "  join <@moderator> - joins the current room of the mentioned moderator if the moderator is in use\n" +
-                    "  join <room name> <@moderator> - joins a room with the mentioned moderator if the name and moderator are available\n" +
+                    "  join <room name> <@moderator> - joins a room with the mentioned moderator and name if are available\n" +
                     "  stats <difficulty/type/topic/result> <difficulty/type/topic/result> <difficulty/type/topic/result>... - shows stats for the given question attributes\n" +
                     "  parser <type> - opens a room used to suggest questions where type is the type of question builder, raw by default\n" +
                     "  review - opens a room used to review suggested questions, this is only available for certified reviewers\n" +

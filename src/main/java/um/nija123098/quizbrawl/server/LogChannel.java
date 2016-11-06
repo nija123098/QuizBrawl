@@ -40,7 +40,7 @@ public class LogChannel {
     @EventSubscriber
     public void handle(DiscordReconnectedEvent event){
         this.connected = false;
-        this.messages.forEach(this::send);
+        this.messages.forEach((s, styles) -> this.send(s.substring(1), styles));
         this.messages = new HashMap<String, MessageBuilder.Styles>();
     }
     public void trace(String s){

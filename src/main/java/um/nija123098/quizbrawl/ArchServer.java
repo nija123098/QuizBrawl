@@ -2,6 +2,7 @@ package um.nija123098.quizbrawl;
 
 import org.apache.commons.io.FileUtils;
 import um.nija123098.quizbrawl.defaultp.BaseBot;
+import um.nija123098.quizbrawl.defaultp.PBParser;
 import um.nija123098.quizbrawl.defaultp.RawParser;
 import um.nija123098.quizbrawl.quizprovider.Brawler;
 import um.nija123098.quizbrawl.server.Server;
@@ -66,6 +67,7 @@ public class ArchServer {
         }
         Log.info("Loaded " + parsers.size() + " Parsers total");
         parsers.add(new RawParser());
+        parsers.add(new PBParser());
         File[] brawlerFiles = new File(Paths.get(FileHelper.getJarPath(), "userdata").toString()).listFiles();
         List<Brawler> brawlers = new ArrayList<Brawler>(brawlerFiles.length);
         for (File file : brawlerFiles) {

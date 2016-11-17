@@ -10,10 +10,10 @@ import java.util.List;
  * Made by Dev on 10/28/2016
  */
 public abstract class PendingQuestion {
-    private String raw;
-    private Question question;
-    private List<String> reviewIDs;
-    private String parser;
+    private final String raw;
+    private final Question question;
+    private final List<String> reviewIDs;
+    private final String parser;
     public PendingQuestion(Question question, String raw, String parser) {
         this.raw = raw;
         this.question = question;

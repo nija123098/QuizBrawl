@@ -145,13 +145,13 @@ public class BotHandler implements BotLink {
     @EventSubscriber
     public void handle(MessageReceivedEvent event){
         if (event.getMessage().getChannel().getID().equals(this.chan)){
-            this.bot.handle(event.getMessage().getContent(), this.getClient(((MessageReceivedEvent) event).getMessage().getAuthor().getID()));
+            this.bot.handle(event.getMessage().getContent(), this.getClient(event.getMessage().getAuthor().getID()));
         }
     }
     @EventSubscriber
     public void handle(TypingEvent event){
         if (event.getChannel().getID().equals(this.chan)){
-            this.bot.onClientTyping(this.getClient(((TypingEvent) event).getUser().getID()));
+            this.bot.onClientTyping(this.getClient(event.getUser().getID()));
         }
     }
     @EventSubscriber
@@ -164,6 +164,7 @@ public class BotHandler implements BotLink {
         try{behaviorName = this.bot.getClass().getSimpleName();
         }catch(NullPointerException e){
             behaviorName = "NO BOT BEHAVIOR";
+            Log.error("No Bot Behavior has been assigned to " + this.name);
         }
         if (!event.getReason().name().equals("LOGGED_OUT")){
             Log.error(this.name + " using " + behaviorName + " disconnected because of " + event.getReason().name());
@@ -198,9 +199,6 @@ public class BotHandler implements BotLink {
     public void reattemptBotBind(){// method call needs to happen once all optimal bot instances are claimed by their owner
         this.bot = new BaseBot();
         this.bots = null;
-        /*if (this.bot == null && this.bots != null){// if one is true both should be
-            this.bot = this.bots.remove(Ref.getInt(this.bots.size()));
-        }*/
     }
     public void bindBot(){
         this.bot.init(this);

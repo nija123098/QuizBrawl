@@ -25,7 +25,7 @@ public class ClientImpl implements Client {
         this.client = client;
     }
     @Override
-    public void add() {// may want to use permisions helper
+    public void add() {
         new PermisionsHelper(this.client.user(), this.handler.getChannel()).addAllow(Permissions.READ_MESSAGES, Permissions.READ_MESSAGE_HISTORY).enact();
         new PermisionsHelper(this.client.user(), this.handler.getVoiceChannel()).addAllow(Permissions.VOICE_CONNECT).enact();
         this.handler.addToRoom(this);// this line should be redundant

@@ -15,7 +15,7 @@ public class PBParser implements Parser {
     }
     @Override
     public void handle(String s) {
-        this.client.msg(++count < 5 ? "This parser does not support direct question input" : "I am only here so I don't get fined");
+        this.client.msg(++this.count < 5 ? "This parser does not support direct question input" : "I am only here so I don't get fined");
     }
     @Override
     public String format(Question q) {

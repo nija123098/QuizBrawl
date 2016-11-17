@@ -28,9 +28,9 @@ public class ArchServer {
     public ArchServer(String path) throws Exception{
         FileHelper.ensureExistence(path + "\\bots");
         FileHelper.ensureExistence(path + "\\parsers");
-        FileHelper.ensureExistence(FileHelper.getJarPath() + "\\userdata");
-        FileHelper.ensureExistence(FileHelper.getJarPath() + "\\processingquestions");
-        FileHelper.ensureExistence(FileHelper.getJarPath() + "\\questions");
+        FileHelper.ensureExistence(path + "\\userdata");
+        FileHelper.ensureExistence(path + "\\processingquestions");
+        FileHelper.ensureExistence(path + "\\questions");
         List<String> tokens;
         try{
             tokens = Files.readAllLines(Paths.get(FileHelper.getJarPath(), "Tokens.txt"));

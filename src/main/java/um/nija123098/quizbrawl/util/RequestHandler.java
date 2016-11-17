@@ -11,6 +11,9 @@ import sx.blah.discord.util.RequestBuffer;
 public class RequestHandler {
     private static volatile int count;
     public static void request(Request request){
+        if (request == null){
+            return;
+        }
         ++count;
         RequestBuffer.request(() -> {
             try {

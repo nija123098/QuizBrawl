@@ -59,7 +59,7 @@ public class Server implements IListener<Event>{
     public void handle(Event event) {
         if (event instanceof GuildCreateEvent){
             this.guild = ((GuildCreateEvent) event).getGuild();
-            this.clientPool = new ClientPool(this.client, this.quizProvider, this.guild, this);
+            this.clientPool = new ClientPool(this.client, this.quizProvider, this.guild, this, this.infoChannel);
             this.clientPool.postInit();
             this.botPool.bind(this.clientPool);
             if (this.guild.getChannelsByName("info").size() == 0){
@@ -81,6 +81,7 @@ public class Server implements IListener<Event>{
         return this.botPool.getBot(name, client);
     }
     public void save(){
+        Log.info("SAVING");
         this.arch.saveBrawlers(this.quizProvider.getBrawlers());
         this.questionProcessor.save();
     }
@@ -95,6 +96,7 @@ public class Server implements IListener<Event>{
     }
     public void close(){
         this.save();
+        Log.warn("CLOSING");
         try{
             this.questionProcessor.close();
             this.botPool.close();
@@ -107,7 +109,6 @@ public class Server implements IListener<Event>{
         }catch(Exception e){
             e.printStackTrace();
         }
-        Log.warn("CLOSING");
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

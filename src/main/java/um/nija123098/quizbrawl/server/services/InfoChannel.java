@@ -65,6 +65,11 @@ public class InfoChannel implements InfoLink {
         ++this.correct;
         this.update();
     }
+    @Override
+    public void setUsersOnline(int count){
+        this.memberOnline = count;
+        this.update();
+    }
     @EventSubscriber
     public void handle(GuildCreateEvent event){
         this.guild = event.getGuild();

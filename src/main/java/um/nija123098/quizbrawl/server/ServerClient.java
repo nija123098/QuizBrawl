@@ -10,6 +10,8 @@ import um.nija123098.quizbrawl.server.room.ReviewRoom;
 import um.nija123098.quizbrawl.server.room.UserRoom;
 import um.nija123098.quizbrawl.server.services.BotFuture;
 import um.nija123098.quizbrawl.server.services.ClientPool;
+import um.nija123098.quizbrawl.util.Log;
+import um.nija123098.quizbrawl.util.StringHelper;
 import um.nija123098.quizbrawlkit.bot.Message;
 
 /**
@@ -33,6 +35,7 @@ public class ServerClient {
         this.server = server;
         this.userRoom = new UserRoom(this, discordClient, this.server, this.guild);
         this.pool = pool;
+        Log.info("Initing " + StringHelper.getPossessive(this.user().getName()) + " server client");
     }
     public IUser user(){
         return this.guild.getUserByID(this.userID);

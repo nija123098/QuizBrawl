@@ -6,4 +6,5 @@ package um.nija123098.quizbrawl.server.services;
 public interface InfoLink {
     void setBotsAvailable(int count);
     void addCorrect();
+    void setUsersOnline(int count);
 }

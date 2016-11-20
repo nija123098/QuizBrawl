@@ -22,19 +22,22 @@ public class ClientPool implements IListener<PresenceUpdateEvent>{
     private QuizProvider provider;
     private IGuild guild;
     private Server server;
-    public ClientPool(IDiscordClient client, QuizProvider provider, IGuild guild, Server server) {
+    private InfoLink infoLink;
+    public ClientPool(IDiscordClient client, QuizProvider provider, IGuild guild, Server server, InfoLink infoLink) {
         this.clients = new ArrayList<ServerClient>();
         this.client = client;
         this.provider = provider;
         this.guild = guild;
         this.server = server;
         this.client.getDispatcher().registerListener(this);
+        this.infoLink = infoLink;
     }
     public void postInit(){
         List<IUser> users = this.guild.getUsers();
         for (int i = 0; i < users.size(); i++) {
             this.add(users.get(i).getID());
         }
+        this.infoLink.setUsersOnline(this.clients.size());
     }
     @Override
     public void handle(PresenceUpdateEvent event) {
@@ -47,6 +50,7 @@ public class ClientPool implements IListener<PresenceUpdateEvent>{
                 this.remove(event.getUser().getID());
             }
         }
+        this.infoLink.setUsersOnline(this.clients.size());
     }
     private void add(String id){
         IUser user = this.guild.getUserByID(id);

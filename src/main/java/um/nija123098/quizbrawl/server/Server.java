@@ -53,7 +53,7 @@ public class Server implements IListener<Event>{
             public void run() {
                 save();
             }
-        }, 3600000);
+        }, 3600000, 3600000);
     }
     @Override
     public void handle(Event event) {
@@ -105,10 +105,10 @@ public class Server implements IListener<Event>{
             e.printStackTrace();
         }
         try{this.guild.getChannelsByName("userchannel").forEach(iChannel -> RequestHandler.request(() -> iChannel.delete()));
-            RequestHandler.request(() -> this.client.logout());
         }catch(Exception e){
             e.printStackTrace();
         }
+        RequestHandler.request(() -> this.client.logout());
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

@@ -57,28 +57,81 @@ public class BotHandler implements BotLink {
         this.bots = bots;
         this.provider = server.getProvider();
         this.clientImpls = new ArrayList<ClientImpl>(2);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try{attemptLog();
-                    this.cancel();
-                    if (discordClient.isReady()){
-                        Log.info("Log in success");
-                    }
-                }catch(Exception e){
-                    Log.info("Bot failed to log in");
-                }
-            }
-        }, 0, 3000);
+        attemptLog();
     }
     private void attemptLog(){
         RequestHandler.request(() -> {
-            this.discordClient = new ClientBuilder().withToken(token).login();
+            this.discordClient = new ClientBuilder().withToken(this.token).login();
             this.discordClient.getDispatcher().registerListener(this);
         });
     }
+    private void postInit(IGuild guild){
+        if (this.guild == null){
+            this.guild = guild;
+            this.connected = true;
+            this.player = new AudioPlayer(this.guild);
+            this.name = this.discordClient.getOurUser().getName();
+            this.bots.stream().filter(b -> b.botOptimal(this.name)).limit(1).forEach(b -> {
+                this.bot = b;
+                this.bots.remove(b);
+                this.bots = null;
+            });
+            this.reattemptBotBind();
+            this.bot.init(this);
+        }
+    }
     public void bind(ClientPool clientPool){
         this.clientPool = clientPool;
+    }
+    @EventSubscriber
+    public void handle(GuildCreateEvent event){
+        this.postInit(event.getGuild());
+        Log.info("Bot type " + this.bot.getClass().getSimpleName() + " inited with " + StringHelper.getPossessive(this.name) + " profile");
+        this.pool.provide(this);
+    }
+    @EventSubscriber
+    public void handle(MessageReceivedEvent event){
+        if (event.getMessage().getChannel().getID().equals(this.chan)){
+            this.bot.handle(event.getMessage().getContent(), this.getClient(event.getMessage().getAuthor().getID()));
+        }
+    }
+    @EventSubscriber
+    public void handle(TypingEvent event){
+        if (event.getChannel().getID().equals(this.chan)){
+            this.bot.onClientTyping(this.getClient(event.getUser().getID()));
+        }
+    }
+    @EventSubscriber
+    public void handle(DiscordDisconnectedEvent event){
+        this.connected = false;
+        this.pool.unprovide(this);
+        try{this.abandonRoom();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        if (this.guild == null){
+            Log.error("A bot disconnected on log in and has not been post-inited, it will be on reconnect");// TODO WORKING ON
+            return;
+        }
+        String behaviorName = this.bot.getClass().getSimpleName();
+        if (!event.getReason().name().equals("LOGGED_OUT")){
+            Log.error(this.name + " using " + behaviorName + " disconnected because of " + event.getReason().name());
+        }else{
+            Log.info(this.name + " using " + behaviorName + " logged out");
+        }
+    }
+    @EventSubscriber
+    public void handle(DiscordReconnectedEvent event){
+        if (event.getClient().getGuilds().size() == 0){
+            Log.error("Mysterious reconnection with no guilds bug!");
+            return;
+        }
+        if (!this.connected){
+            this.postInit(event.getClient().getGuilds().get(0));
+            this.connected = true;
+            this.pool.provide(this);
+        }
+        Log.info(this.name + " reconnected!");
     }
     @Override
     public void setStatus(String status) {
@@ -112,73 +165,21 @@ public class BotHandler implements BotLink {
     }
     @Override
     public void abandonRoom() {
-        this.bot.onLeaveRoom();
         if (this.roomName() != null){
-            RequestHandler.request(() -> {
-                this.getChannel().delete();
-                this.chan = null;
-            });
-            RequestHandler.request(() -> {
-                this.getVoiceChannel().delete();
-                this.voiceChan = null;
-            });
-        }
-        this.pool.provide(this);
-        this.clientImpls = new ArrayList<ClientImpl>(2);
-    }
-    @EventSubscriber
-    public void handle(GuildCreateEvent event){
-        this.connected = true;
-        this.guild = event.getGuild();
-        this.player = new AudioPlayer(this.guild);
-        this.name = this.discordClient.getOurUser().getName();
-        this.bots.stream().filter(b -> b.botOptimal(this.name)).limit(1).forEach(b -> {
-            this.bot = b;
-            this.bots.remove(b);
-            this.bots = null;
-        });
-        this.reattemptBotBind();
-        this.bindBot();
-        Log.info("Bot type " + this.bot.getClass().getSimpleName() + " inited with " + StringHelper.getPossessive(this.name) + " profile");
-        this.pool.provide(this);
-    }
-    @EventSubscriber
-    public void handle(MessageReceivedEvent event){
-        if (event.getMessage().getChannel().getID().equals(this.chan)){
-            this.bot.handle(event.getMessage().getContent(), this.getClient(event.getMessage().getAuthor().getID()));
-        }
-    }
-    @EventSubscriber
-    public void handle(TypingEvent event){
-        if (event.getChannel().getID().equals(this.chan)){
-            this.bot.onClientTyping(this.getClient(event.getUser().getID()));
-        }
-    }
-    @EventSubscriber
-    public void handle(DiscordDisconnectedEvent event){
-        this.connected = false;
-        this.pool.unprovide(this);
-        try{this.abandonRoom();
-        }catch(Exception ignored){}
-        String behaviorName;
-        try{behaviorName = this.bot.getClass().getSimpleName();
-        }catch(NullPointerException e){
-            behaviorName = "NO BOT BEHAVIOR";
-            Log.error("No Bot Behavior has been assigned to " + this.name);
-        }
-        if (!event.getReason().name().equals("LOGGED_OUT")){
-            Log.error(this.name + " using " + behaviorName + " disconnected because of " + event.getReason().name());
-        }else{
-            Log.info(this.name + " using " + behaviorName + " logged out");
-        }
-    }
-    @EventSubscriber
-    public void handle(DiscordReconnectedEvent event){
-        if (!this.connected){
-            this.connected = true;
+            this.bot.onLeaveRoom();
+            if (this.roomName() != null){
+                RequestHandler.request(() -> {
+                    this.getChannel().delete();
+                    this.chan = null;
+                });
+                RequestHandler.request(() -> {
+                    this.getVoiceChannel().delete();
+                    this.voiceChan = null;
+                });
+            }
             this.pool.provide(this);
+            this.clientImpls = new ArrayList<ClientImpl>(2);
         }
-        Log.info(this.name + " reconnected!");
     }
     @Override
     public File getTempFile(String extension){
@@ -197,11 +198,12 @@ public class BotHandler implements BotLink {
         }catch(NullPointerException ignored){}
     }
     public void reattemptBotBind(){// method call needs to happen once all optimal bot instances are claimed by their owner
-        this.bot = new BaseBot();
-        this.bots = null;
+        if (this.bot == null){
+            this.bot = new BaseBot();
+            this.bots = null;
+        }
     }
     public void bindBot(){
-        this.bot.init(this);
     }
     IChannel getChannel(){
         return this.guild.getChannelByID(this.chan);

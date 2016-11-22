@@ -35,7 +35,6 @@ public class ServerClient {
         this.server = server;
         this.userRoom = new UserRoom(this, discordClient, this.server, this.guild);
         this.pool = pool;
-        Log.info("Initing " + StringHelper.getPossessive(this.user().getName()) + " server client");
     }
     public IUser user(){
         return this.guild.getUserByID(this.userID);

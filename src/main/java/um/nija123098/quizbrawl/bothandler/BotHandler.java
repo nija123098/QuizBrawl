@@ -124,9 +124,15 @@ public class BotHandler implements BotLink {
     public void handle(DiscordReconnectedEvent event){
         if (event.getClient().getGuilds().size() == 0){
             Log.error("Mysterious reconnection with no guilds bug!");
-            return;
         }
         if (!this.connected){
+            if (this.guild == null){
+                RequestHandler.request(() -> {
+                    this.discordClient.logout();
+                    RequestHandler.request(1000, () -> this.discordClient.login());
+                });
+                return;
+            }
             this.postInit(event.getClient().getGuilds().get(0));
             this.connected = true;
             this.pool.provide(this);

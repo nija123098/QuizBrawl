@@ -182,6 +182,8 @@ public class UserRoom {// should change to command structure
                 this.msg("There seems to have been an error uploading the jar, the developer has been notified");
                 Log.error("No QuizBrawlKit jar in path!");
             }
+        }else if (handle.startsWith("ping")){
+            this.msg("pong");
         }
     }
     public Message msg(String content){

@@ -4,8 +4,8 @@ import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.Event;
 import sx.blah.discord.api.events.IListener;
-import sx.blah.discord.handle.impl.events.GuildCreateEvent;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import um.nija123098.quizbrawl.ArchServer;
 import um.nija123098.quizbrawl.quizprovider.Brawler;
@@ -57,8 +57,8 @@ public class Server implements IListener<Event>{
     }
     @Override
     public void handle(Event event) {
-        if (event instanceof GuildCreateEvent){
-            this.guild = ((GuildCreateEvent) event).getGuild();
+        if (event instanceof ReadyEvent){
+            this.guild = ((ReadyEvent) event).getClient().getGuilds().get(0);
             this.clientPool = new ClientPool(this.client, this.quizProvider, this.guild, this, this.infoChannel);
             this.clientPool.postInit();
             this.botPool.bind(this.clientPool);

@@ -2,9 +2,9 @@ package um.nija123098.quizbrawl.server;
 
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.DiscordDisconnectedEvent;
-import sx.blah.discord.handle.impl.events.DiscordReconnectedEvent;
+import sx.blah.discord.handle.impl.events.DisconnectedEvent;
 import sx.blah.discord.handle.impl.events.GuildCreateEvent;
+import sx.blah.discord.handle.impl.events.ReconnectSuccessEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.util.MessageBuilder;
 import um.nija123098.quizbrawl.util.RequestHandler;
@@ -34,11 +34,11 @@ public class LogChannel {
         RequestHandler.request(() -> this.guild.getChannelByID(this.id).getMessages().deleteAfter(0));
     }
     @EventSubscriber
-    public void handle(DiscordDisconnectedEvent event){
+    public void handle(DisconnectedEvent event){
         this.connected = true;
     }
     @EventSubscriber
-    public void handle(DiscordReconnectedEvent event){
+    public void handle(ReconnectSuccessEvent event){
         this.connected = false;
         this.messages.forEach((s, styles) -> this.send(s.substring(1), styles));
         this.messages = new HashMap<String, MessageBuilder.Styles>();

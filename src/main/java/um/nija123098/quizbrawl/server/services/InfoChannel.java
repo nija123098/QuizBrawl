@@ -2,10 +2,7 @@ package um.nija123098.quizbrawl.server.services;
 
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.GuildCreateEvent;
-import sx.blah.discord.handle.impl.events.PresenceUpdateEvent;
-import sx.blah.discord.handle.impl.events.UserJoinEvent;
-import sx.blah.discord.handle.impl.events.UserLeaveEvent;
+import sx.blah.discord.handle.impl.events.*;
 import sx.blah.discord.handle.obj.*;
 import um.nija123098.quizbrawl.util.RequestHandler;
 
@@ -71,8 +68,8 @@ public class InfoChannel implements InfoLink {
         this.update();
     }
     @EventSubscriber
-    public void handle(GuildCreateEvent event){
-        this.guild = event.getGuild();
+    public void handle(ReadyEvent event){
+        this.guild = event.getClient().getGuilds().get(0);
         IRole mod = this.guild.getRolesByName("moderator").get(0);
         this.memberCount = (int) this.guild.getUsers().stream().filter(user -> !user.getRolesForGuild(this.guild).contains(mod)).count() - 2;// -2 for the operators
         this.memberOnline = (int) (this.guild.getUsers().stream().filter(user -> !user.getPresence().equals(Presences.OFFLINE)).filter(user1 -> !user1.getRolesForGuild(this.guild).get(0).getName().equals("moderator")).count() - 2);

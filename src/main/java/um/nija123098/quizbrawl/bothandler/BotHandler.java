@@ -102,7 +102,7 @@ public class BotHandler implements BotLink {
         }
     }
     @EventSubscriber
-    public void handle(DiscordDisconnectedEvent event){
+    public void handle(DisconnectedEvent event){
         this.connected = false;
         this.pool.unprovide(this);
         try{this.abandonRoom();
@@ -121,7 +121,7 @@ public class BotHandler implements BotLink {
         }
     }
     @EventSubscriber
-    public void handle(DiscordReconnectedEvent event){
+    public void handle(ReconnectSuccessEvent event){
         if (event.getClient().getGuilds().size() == 0){
             Log.error("Mysterious reconnection with no guilds bug!");
         }
